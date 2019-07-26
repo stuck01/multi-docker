@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t haitam/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true haitam/react-test npm test
+
+after_success:
+  - docker build -t haitam/multi-client ./client
+  - docker build -t haitam/multi-nginx ./nginx
+  - docker build -t haitam/multi-server ./server
+  - docker build -t haitam/multi-worker ./worker
+  #login to docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID"  --password-stdin
+  # take the images above and push them to docker hub
+  - docker push haitam/multi-client
+  - docker push haitam/multi-nginx
+  - docker push haitam/multi-server
+  - docker push haitam/multi-worker
