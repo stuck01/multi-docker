@@ -15,7 +15,8 @@ after_success:
   - docker build -t haitam/multi-worker ./worker
   #login to docker hub
   #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID"  --password-stdin
-  - docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+  #- docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+  - echo "$DOCKER_PASSWORD" | docker login --username haitam --password-stdin
   # take the images above and push them to docker hub
   - docker push haitam/multi-client
   - docker push haitam/multi-nginx
